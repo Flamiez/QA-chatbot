@@ -11,10 +11,12 @@ dependencies = [
     "langchain-huggingface>=1.0.1",
     "langchain-qdrant>=1.1.0",
     "langchain-text-splitters>=1.0.0",
+    "pdfplumber>=0.11.8",
     "pydantic>=2.12.4",
     "pydantic-settings>=2.11.0",
     "pymupdf>=1.26.6",
     "rootutils>=1.0.7",
     "sentence-transformers>=5.1.2",
+    "tiktoken>=0.12.0",
     "uvicorn>=0.38.0",
 ]

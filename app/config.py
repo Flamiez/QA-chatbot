@@ -8,6 +8,6 @@ def get_settings():
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
     embedding_model: str
-    qa_model: str
+    #qa_model: str
     groq_api_key: str
 

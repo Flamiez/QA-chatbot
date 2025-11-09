@@ -1,11 +1,12 @@
 from typing import List
 import os
+import pdfplumber
 import rootutils
 rootutils.setup_root(__file__, indicator=['.git', 'pyproject.toml'], pythonpath=True)
 
 from app.models import init_embedder, init_QA_pipeline
 from app.vectorstore import query_top_k
-from langchain_text_splitters import CharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 EMBEDDER = init_embedder()
 QA_PIPELINE = init_QA_pipeline()
@@ -14,20 +15,35 @@ def embed_text(text: str) -> List[float]:
     return EMBEDDER.embed_documents([text])[0]
 
 def split_into_chunks(text: str):
-    splitter =  CharacterTextSplitter(separator="\n", chunk_size=1000, chunk_overlap=100, length_function=len)
+    splitter =  RecursiveCharacterTextSplitter.from_tiktoken_encoder(chunk_size=1000, chunk_overlap=100)
     return splitter.split_text(text)
 
 def process_document(path: str):
-    import fitz
-    doc = fitz.open(path)
-    for page_num, page in enumerate(doc):
-        text = page.get_text()
-        for chunk in split_into_chunks(text):
-            yield {
-                "text": chunk,
-                "doc": os.path.basename(path),
-                "page": page_num + 1
-            }
+    with pdfplumber.open(path) as pdf:
+        for page_num, page in enumerate(pdf.pages, start=1):
+            text = page.extract_text(x_tolerance=1, y_tolerance=1) or ""
+
+            tables = page.extract_tables()
+            table_chunks = []
+            for table in tables:
+                table_str = "\n".join([", ".join([cell or "" for cell in row]) for row in table if row])
+                if table_str.strip():
+                    table_chunks.append(f"Table (Page {page_num}):\n{table_str}")
+
+            for chunk in split_into_chunks(text):
+                yield {
+                    "text": chunk,
+                    "doc": os.path.basename(path),
+                    "page": page_num,
+                }
+
+            for table_text in table_chunks:
+                for chunk in split_into_chunks(table_text):
+                    yield {
+                        "text": chunk,
+                        "doc": os.path.basename(path),
+                        "page": page_num,
+                    }
 
 def extract_context_from_answers(answers, threshold):
     context_parts = []
