@@ -1,4 +1,5 @@
 from typing import List
+import os
 import rootutils
 rootutils.setup_root(__file__, indicator=['.git', 'pyproject.toml'], pythonpath=True)
 
@@ -24,7 +25,7 @@ def process_document(path: str):
         for chunk in split_into_chunks(text):
             yield {
                 "text": chunk,
-                "doc": path,
+                "doc": os.path.basename(path),
                 "page": page_num + 1
             }
 
