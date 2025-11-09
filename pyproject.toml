@@ -1,0 +1,20 @@
+[project]
+name = "itodev-qa-chatbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.121.0",
+    "groq>=0.33.0",
+    "langchain>=1.0.4",
+    "langchain-huggingface>=1.0.1",
+    "langchain-qdrant>=1.1.0",
+    "langchain-text-splitters>=1.0.0",
+    "pydantic>=2.12.4",
+    "pydantic-settings>=2.11.0",
+    "pymupdf>=1.26.6",
+    "rootutils>=1.0.7",
+    "sentence-transformers>=5.1.2",
+    "uvicorn>=0.38.0",
+]
