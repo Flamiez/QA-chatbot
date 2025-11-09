@@ -119,3 +119,16 @@ arba
   "k": 4
 }
 ```
+---
+### Chunking/embedding choices & trade-offs
+Naudojant RecursiveCharacterTextSplitter su table-aware skaitymu
+Pliusai
+- Nekarpo lentelių į kelias dalis todėl nepraranda lentelės konteksto
+- Skaido pagal paragrafus ir sakinius minimizuojant konteksto karpyma vidury minties
+Minusai
+- Nors lentelės išsaugomos, lentelių struktūra ne visada aiški
+- Didelės saugomos skiltys, mažiau embeddings
+### Known limitations
+- Paragrafas arba lentelė einanti per kelis puslapius vis tiek bus suskaidyta ir galimas konteksto praradimas
+- Lentelių ir paragrafo konteksto susiejimas neimplementuotas, reikėtų paduoti ir lenteles esančias prieš/po konteksto pagla puslapį siekiant pilnai jas panaudoti
+- Mažesni modeliai negali apdoroti tokių didelių chunks dėl mažo context window
