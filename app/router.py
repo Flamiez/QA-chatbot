@@ -54,9 +54,10 @@ def ingest_documents(paths: List[str] = Body(..., description="enter paths of do
 def query(request: QueryRequest):
     question = request.query_text
     k = request.k
-
-    answer, citations, meta = process_query(client=client, query=question, k=k)
-
+    try:
+        answer, citations, meta = process_query(client=client, query=question, k=k)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
     return ResponseModelQuery(
         answer= answer,
