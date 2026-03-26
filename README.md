@@ -1,4 +1,4 @@
-# iToDev QA chatbot
+# QA chatbot
 ---
 ## Įsirašymo gidas
 ### 1. Įsirašyti uv
